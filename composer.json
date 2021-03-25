@@ -1,0 +1,27 @@
+{
+  "name": "sdaweb/media.bibelstudiet.no",
+  "description": "Media API for bibelstudiet.no",
+  "type": "project",
+  "license": "UNLICENSED",
+  "authors": [
+    {
+      "name": "Torleif Berger",
+      "email": "torleif@outlook.com"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "": "src/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Svish/php-image"
+    }
+  ],
+  "require": {
+    "php": ">=7",
+    "kus/php-image": "dev-master"
+  }
+}
