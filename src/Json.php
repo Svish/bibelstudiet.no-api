@@ -6,6 +6,7 @@ class Json
   {
     $json = json_encode($data, JSON_NUMERIC_CHECK);
     
+    // TODO: Limit to configured hosts
     header('Access-Control-Allow-Origin: *');
     
     # JSON if no callback
