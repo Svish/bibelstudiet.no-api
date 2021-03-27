@@ -1,0 +1,9 @@
+{
+  "search.exclude": {
+    "vendor": true,
+    ".cache": true
+  },
+  "files.exclude": {
+    "composer.lock": true
+  }
+}
