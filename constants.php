@@ -17,3 +17,7 @@ mb_internal_encoding("UTF-8");
 date_default_timezone_set('Europe/Oslo');
 define('LC', setlocale(LC_ALL, 'nb_NO.utf8', 'nb_NO.utf-8', 'nb_NO', 'nor', ''));
 setlocale(LC_NUMERIC, 'C');
+
+// Directories
+define('CACHE', DOCROOT.'.cache'.DIRECTORY_SEPARATOR);
+define('CONTENT', DOCROOT.'..'.DIRECTORY_SEPARATOR.'sdaweb-ssl'.DIRECTORY_SEPARATOR.'__'.DIRECTORY_SEPARATOR.LANG.DIRECTORY_SEPARATOR);

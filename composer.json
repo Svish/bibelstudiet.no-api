@@ -22,6 +22,8 @@
   ],
   "require": {
     "php": ">=7",
-    "kus/php-image": "dev-master"
+    "kus/php-image": "dev-master",
+    "ralouphie/mimey": "^2.1",
+    "james-heinrich/getid3": "^1.9"
   }
 }

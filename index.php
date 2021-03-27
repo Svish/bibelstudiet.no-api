@@ -2,6 +2,7 @@
 
 // Include autoloader and stuff
 require 'vendor/autoload.php';
+require 'src/util.php';
 require 'constants.php';
 
 // Error handling
@@ -17,4 +18,4 @@ unset($_GET['path_uri']);
 header_remove();
 
 // Kick things off
-Api::init()->serve();
+Api::serve();

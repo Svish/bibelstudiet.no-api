@@ -18,12 +18,23 @@ class ErrorHandler {
    * @see https://www.php.net/manual/en/function.set-exception-handler
    */
   public static function exception_handler(Throwable $error): void {
-    $data = ['message' => $error->getMessage()];
-
-    $status = $error instanceof HTTP_Exception ? $error->getHttpStatus() : 500;
-    
+    $status = $error instanceof Error_Http
+      ? $error->getHttpStatus()
+      : 500;
     HTTP::set_status($status);
-    Json::output($data);
+
+    $data = ['error' => $error->getMessage()];
+
+    if ($error->getPrevious() != null)
+      $data['reason'] = $error->getPrevious()->getMessage();
+
+    if (ENV === 'dev')
+      $data += [
+        'file' => "{$error->getFile()}@{$error->getLine()}",
+        'trace' => $error->getTrace(),
+      ];
+
+    (new JsonResponse($data))->flush();
   }
-  
+
 }
