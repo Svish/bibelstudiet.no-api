@@ -1,12 +1,14 @@
 <?php
 
 // Include autoloader
+
 require 'vendor/autoload.php';
 
 // Error handling
+$errorHandler = new Bibelstudiet\Error\ErrorHandler();
 error_reporting(E_ALL);
-set_error_handler(['\Bibelstudiet\Error\Handler', 'error_handler']);
-set_exception_handler(['\Bibelstudiet\Error\Handler', 'exception_handler']);
+set_error_handler([$errorHandler, 'error_handler']);
+set_exception_handler([$errorHandler, 'exception_handler']);
 
 // Remove default headers like X-Powered-By
 header_remove();
