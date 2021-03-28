@@ -15,7 +15,7 @@ class YearData extends DirectoryData {
    */
   protected function gatherData(SplFileInfo $yearDir): Iterator {
     yield 'type' => 'year';
-    yield 'url' => $yearDir->getFilename();
+    yield 'id' => [intval($yearDir->getFilename())];
     yield 'name' => $yearDir->getFilename();
   }
 

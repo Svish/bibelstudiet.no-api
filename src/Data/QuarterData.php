@@ -24,7 +24,7 @@ class QuarterData extends DirectoryData {
     [, $year, $quarter] = $this->parsePath($quarterDir);
 
     yield 'type' => 'quarter';
-    yield 'url' => "$year/$quarter";
+    yield 'id' => [intval($year), intval($quarter)];
     yield 'name' => "$quarter. Kvartal";
 
     foreach ($this->getQuarterFiles($quarterDir) as $file)

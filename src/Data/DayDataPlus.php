@@ -18,9 +18,6 @@ class DayDataPlus extends DayData {
    * @return Iterator Yields data about day.
    */
   protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
-    [, $year, $quarter, $week] = $this->parsePath($weekDir);
-    yield 'parent' => "$year/$quarter/$week";
-
     yield from parent::gatherData($weekDir, $day);
 
     foreach ($this->getDayFiles($weekDir, $day) as $file)

@@ -19,9 +19,6 @@ class QuarterDataPlus extends QuarterData {
    * @return Iterator Adds more details and list of weeks.
    */
   protected function gatherData(SplFileInfo $quarterDir): Iterator {
-    [, $year] = $this->parsePath($quarterDir);
-    yield 'parent' => "$year";
-
     yield from parent::gatherData($quarterDir);
 
     foreach ($this->getQuarterFiles($quarterDir) as $file)

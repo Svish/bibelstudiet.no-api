@@ -19,7 +19,7 @@ use Bibelstudiet\Date;
 /**
  * Map over all dates and their corresponding lesson.
  */
-class DatemapController extends IndexController {
+class DatemapController extends RootController {
 
   use CachedGet;
 

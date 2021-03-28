@@ -27,7 +27,7 @@ class DayData extends JsonResponse {
    */
   protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
-    yield 'url' => "$year/$quarter/$week/$day";
+    yield 'id' => [intval($year), intval($quarter), intval($week), $day];
 
     foreach ($this->getDayFiles($weekDir, $day) as $file)
       switch($file->getExtension()) {

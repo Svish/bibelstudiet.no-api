@@ -10,7 +10,7 @@ use CallbackFilterIterator;
 /**
  * The index with its list of years.
  */
-class IndexData extends DirectoryData {
+class RootData extends DirectoryData {
 
   /**
    * @return Iterator Yields data about year.

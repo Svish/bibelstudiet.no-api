@@ -22,7 +22,7 @@ class WeekData extends DirectoryData {
   protected function gatherData(SplFileInfo $weekDir): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
     yield 'type' => 'week';
-    yield 'url' => "$year/$quarter/$week";
+    yield 'id' => [intval($year), intval($quarter), intval($week)];
     yield 'name' => "Uke $week";
 
     foreach ($this->getWeekFiles($weekDir) as $file)
