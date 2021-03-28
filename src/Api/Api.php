@@ -10,9 +10,6 @@ final class Api {
   }
 
   public function serve(string $method, string $path): void {
-    // TODO: Limit to configured hosts
-    header('Access-Control-Allow-Origin: *');
-
     $response = $this->router->run($method, $path);
     $response->flush();
   }
