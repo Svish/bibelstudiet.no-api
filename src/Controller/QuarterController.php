@@ -8,13 +8,14 @@ use SplFileInfo;
 use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Api\Request;
 use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Content;
 use Bibelstudiet\Data\QuarterDataPlus;
 use Bibelstudiet\Data\WeekData;
 
 /**
  * A quarter and its weeks.
  */
-final class QuarterController extends Controller {
+final class QuarterController {
 
   use CachedGet;
 
@@ -22,7 +23,7 @@ final class QuarterController extends Controller {
    * @return SplFileInfo /<year>/<quarter>
    */
   final protected function getQuarterDir(Request $request): SplFileInfo {
-    return $this->getContentDir(
+    return Content::getDir(
       intval($request->year),
       intval($request->quarter)
     );

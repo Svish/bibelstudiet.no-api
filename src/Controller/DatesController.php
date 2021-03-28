@@ -11,7 +11,7 @@ use CallbackFilterIterator;
 
 use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\JsonResponse;
-use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Content;
 use Bibelstudiet\Data\DayData;
 use Bibelstudiet\Data\WeekData;
 use Bibelstudiet\Date;
@@ -19,12 +19,10 @@ use Bibelstudiet\Date;
 /**
  * Map over all dates and their corresponding lesson.
  */
-class DatemapController extends RootController {
-
-  use CachedGet;
+class DatesController {
 
   protected function getDataSources(Request $request): Iterator {
-    $rootDir = $this->getRootDir();
+    $rootDir = Content::getDir();
     $it = new RecursiveDirectoryIterator($rootDir, FilesystemIterator::SKIP_DOTS);
     $it = new RecursiveIteratorIterator($it);
     $it = new CallbackFilterIterator($it, function(SplFileInfo $file) {

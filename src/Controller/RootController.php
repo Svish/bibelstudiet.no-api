@@ -8,12 +8,13 @@ use SplFileInfo;
 use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Content;
 use Bibelstudiet\Data\RootData;
 
 /**
  * List of years.
  */
-class RootController extends Controller {
+class RootController {
 
   use CachedGet;
 
@@ -21,7 +22,7 @@ class RootController extends Controller {
    * @return SplFileInfo /
    */
   final protected function getRootDir(): SplFileInfo {
-    return $this->getContentDir();
+    return Content::getDir();
   }
 
   protected function getDataSources(Request $request): Iterator {

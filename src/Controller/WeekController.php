@@ -8,13 +8,14 @@ use SplFileInfo;
 use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Api\Request;
 use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Content;
 use Bibelstudiet\Data\WeekData;
 use Bibelstudiet\Data\WeekDataPlus;
 
 /**
  * A week and its days.
  */
-class WeekController extends Controller {
+class WeekController {
 
   use CachedGet;
 
@@ -22,7 +23,7 @@ class WeekController extends Controller {
    * @return SplFileInfo /<year>/<quarter>/<week>
    */
   final protected function getWeekDir(Request $request): SplFileInfo {
-    return $this->getContentDir(
+    return Content::getDir(
       intval($request->year),
       intval($request->quarter),
       intval($request->week)
