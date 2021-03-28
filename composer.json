@@ -2,7 +2,7 @@
   "name": "sdaweb/media.bibelstudiet.no",
   "description": "Media API for bibelstudiet.no",
   "type": "project",
-  "license": "UNLICENSED",
+  "license": "proprietary",
   "authors": [
     {
       "name": "Torleif Berger",
