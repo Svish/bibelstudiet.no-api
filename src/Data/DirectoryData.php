@@ -11,7 +11,6 @@ abstract class DirectoryData extends JsonResponse {
 
   public function __construct(SplFileInfo $dir) {
     $data = $this->gatherData($dir);
-    $data = iterator_to_array($data, true);
     parent::__construct($data);
   }
 

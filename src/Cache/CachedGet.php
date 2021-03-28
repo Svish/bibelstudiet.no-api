@@ -27,10 +27,10 @@ trait CachedGet {
   protected abstract function getDataSources(Request $request): Iterator;
 
 
-  public function get(Request $request): Response {
+  public final function get(Request $request): Response {
     // For debugging source file paths
     if (isset($_GET['sources']))
-      return new JsonResponse(mapToArray($this->getDataSources($request),
+      return new JsonResponse(map($this->getDataSources($request),
         function(SplFileInfo $file) {
           return cleanPath($file);
         }

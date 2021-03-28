@@ -37,7 +37,6 @@ class DatemapController extends IndexController {
   protected function load(Request $request): JsonResponse {
     $weekFiles = $this->getDataSources($request);
     $data = $this->gatherDates($weekFiles);
-    $data = iterator_to_array($data, true);
     return new JsonResponse($data);
   }
 

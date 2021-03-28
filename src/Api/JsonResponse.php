@@ -9,6 +9,8 @@ class JsonResponse implements Response, JsonSerializable {
   protected $data;
 
   public function __construct($data) {
+    if ($data instanceof Iterator)
+      $data = iterator_to_array($data, true);
     $this->data = $data;
   }
 
@@ -30,9 +32,8 @@ class JsonResponse implements Response, JsonSerializable {
   }
 
   public static function debug($data): void {
-    if ($data instanceof Iterator)
-      $data = iterator_to_array($data, true);
-    (new static($data))->flush();
+    $res = new static($data);
+    $res->flush();
     exit;
   }
 }

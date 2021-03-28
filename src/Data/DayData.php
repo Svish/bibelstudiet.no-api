@@ -19,7 +19,6 @@ class DayData extends JsonResponse {
 
   public function __construct(SplFileInfo $weekDir, int $day) {
     $data = $this->gatherData($weekDir, $day);
-    $data = iterator_to_array($data, true);
     parent::__construct($data);
   }
 
