@@ -1,17 +1,13 @@
+SetEnv ENV dev
 
 # Charset
 AddDefaultCharset UTF-8
 
-# Compression
-AddOutputFilterByType DEFLATE image/svg+xml text/html text/plain text/xml text/css text/javascript application/json application/javascript application/xhtml+xml text/cache-manifest
-
-# Environment
+# Rewrite base
 RewriteEngine on
 RewriteBase /media.bibelstudiet.no/
 SetEnv BASE /media.bibelstudiet.no/
-SetEnv ENV dev
 
-# Pretty Urls
+# Use PHP
 RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteRule .* index.php/$0 [L]
-RewriteRule .* index.php?path_uri=/$0 [PT,L,QSA]
+RewriteRule . index.php [L]

@@ -3,63 +3,37 @@
 namespace Bibelstudiet\Api;
 
 use Bibelstudiet\Error\NotFoundError;
-use Bibelstudiet\Error\DeveloperError;
 use Bibelstudiet\Error\HttpError;
 
 final class Router {
-  private $basepath;
-  private $routes = [];
+  private array $routes;
 
-  public function __construct(string $basepath) {
-    $this->basepath = rtrim($basepath, '/');
+  public function __construct(array $routes) {
+    $this->routes = $routes;
   }
 
-  /**
-   * @param $route Regular expression to match route
-   * @param string $handler Callable function or name of class to handle request
-   */
-  public function add(string $route, string $handler): self {
-    array_push($this->routes, [$route, $handler]);
-    return $this;
-  }
+  public function run(string $method, string $path): Response {
+    $path = '/'.trim($path, '/');
+    $path = parse_url($path);
+    $path = urldecode($path['path']);
 
-  /**
-   * @return mixed Returns response from route handler.
-   */
-  public function run() {
-    $url = $_SERVER['REQUEST_URI'];
-    $url = substr($url, strlen($this->basepath));
-    $url = '/'.trim($url, '/');
-    $url = parse_url($url);
+    $method = strtolower($method);
 
-    $path = urldecode($url['path']);
-    $method = strtolower($_SERVER['REQUEST_METHOD']);
-
-    foreach ($this->routes as $route) {
-      [$pattern, $handler] = $route;
-
+    foreach ($this->routes as $pattern => $handler) {
       if ( ! preg_match("#^$pattern$#u", $path, $params))
         continue;
 
-      return $this->call($handler, $method, $params);
+      $request = new Request($method, array_shift($params), $params);
+
+      try {
+        $handler = new $handler();
+        $method = new \ReflectionMethod($handler, $request->getMethod());
+        return $method->invoke($handler, $request);
+      } catch (\ReflectionException $e) {
+        throw new HttpError(405, null, $e);
+      }
     }
 
     throw new NotFoundError("Path '$path' not found");
-  }
-
-  private function call($handler, string $method, array $params) {
-    if (!class_exists($handler))
-      throw new DeveloperError("Handler not found: $handler");
-
-    $handler = [new $handler(), $method];
-
-    try {
-      $method = new \ReflectionMethod(...$handler);
-    } catch (\ReflectionException $e) {
-      throw new HttpError(405, null, $e);
-    }
-
-    $path = array_shift($params);
-    return $handler(new Request($path, $params));
   }
 }

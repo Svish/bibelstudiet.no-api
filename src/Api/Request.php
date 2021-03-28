@@ -3,12 +3,18 @@
 namespace Bibelstudiet\Api;
 
 final class Request {
+  private string $method;
   private string $path;
   private array $params;
 
-  public function __construct(string $path, array $params) {
+  public function __construct(string $method, string $path, array $params) {
+    $this->method = $method;
     $this->path = $path;
     $this->params = $params;
+  }
+
+  public function getMethod(): string {
+    return $this->method;
   }
 
   public function getPath(): string {

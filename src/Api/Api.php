@@ -3,30 +3,17 @@
 namespace Bibelstudiet\Api;
 
 final class Api {
+  private Router $router;
 
-  public static function serve(): void {
-    $router = new Router(BASE_URI);
+  public function __construct(array $routes) {
+    $this->router = new Router($routes);
+  }
 
-    $router->add('/', '\Bibelstudiet\Controller\IndexController');
-
-    $router->add('/(?<year>\d{4})', '\Bibelstudiet\Controller\YearController');
-
-    $router->add('/(?<year>\d{4})/(?<quarter>1|2|3|4)', '\Bibelstudiet\Controller\QuarterController');
-
-    $router->add('/(?<year>\d{4})/(?<quarter>1|2|3|4)/(?<week>\d+)', '\Bibelstudiet\Controller\WeekController');
-
-    $router->add('/(?<year>\d{4})/(?<quarter>1|2|3|4)/(?<week>\d+)/(?<day>0|1|2|3|4|5|6|7)', '\Bibelstudiet\Controller\DayController');
-
-
-    $router->add('/dates', '\Bibelstudiet\Controller\DatemapController');
-
-    $router->add('/validate', '\Bibelstudiet\Controller\ValidateController');
-
-
+  public function serve(string $method, string $path): void {
     // TODO: Limit to configured hosts
     header('Access-Control-Allow-Origin: *');
 
-    $response = $router->run();
+    $response = $this->router->run($method, $path);
     $response->flush();
   }
 
