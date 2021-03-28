@@ -1,9 +1,27 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use DateInterval;
+use DateTime;
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use CallbackFilterIterator;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Data\DayData;
+use Bibelstudiet\Data\WeekData;
+use Bibelstudiet\Date;
+use Bibelstudiet\Error\HttpError;
+
 /**
- * List of years.
+ * Validate all data files.
  */
-class Controller_Validate extends Controller_Base {
+class ValidateController extends Controller {
 
   protected function getFiles(Request $request): Iterator {
     $rootDir = $this->getContentDir();
@@ -16,7 +34,7 @@ class Controller_Validate extends Controller_Base {
   }
 
   public function get(Request $request): JsonResponse {
-    exit('TODO');
+    throw new HttpError(501);
     $weekFiles = $this->getFiles($request);
     $dates = $this->gather($weekFiles);
     $dates = $this->verifyDates($dates);
@@ -28,19 +46,19 @@ class Controller_Validate extends Controller_Base {
   private function gather(Iterator $weekFiles): Iterator {
     foreach ($weekFiles as $weekFile) {
       // Sunday
-      $sunday = Data_Week::from($weekFile->getPathInfo());
+      $sunday = WeekData::from($weekFile->getPathInfo());
       yield $sunday->date => $sunday;
 
       // Monday..Friday
       foreach (range(2, 6) as $day) {
-        $day = Data_Day::from($weekFile->getPathInfo(), $day);
+        $day = DayData::from($weekFile->getPathInfo(), $day);
         $date = new Date($day->date);
         yield "$date" => $day;
       }
 
       // Sabbath
-      $sabbath = Data_Day::from($weekFile->getPathInfo(), 7);
-      yield $sabbath->date => Data_Day::from($weekFile->getPathInfo(), 7);
+      $sabbath = DayData::from($weekFile->getPathInfo(), 7);
+      yield $sabbath->date => DayData::from($weekFile->getPathInfo(), 7);
     }
   }
 

@@ -1,6 +1,14 @@
 <?php
 
-class ErrorHandler {
+namespace Bibelstudiet\Error;
+
+use Throwable;
+use ErrorException;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Http;
+
+final class Handler {
 
   /**
    * @see https://www.php.net/manual/en/function.set-error-handler
@@ -18,10 +26,10 @@ class ErrorHandler {
    * @see https://www.php.net/manual/en/function.set-exception-handler
    */
   public static function exception_handler(Throwable $error): void {
-    $status = $error instanceof Error_Http
+    $status = $error instanceof HttpError
       ? $error->getHttpStatus()
       : 500;
-    HTTP::set_status($status);
+    Http::set_status($status);
 
     $data = ['error' => $error->getMessage()];
 

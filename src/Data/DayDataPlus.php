@@ -1,14 +1,23 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+
+use getID3;
+
+use Bibelstudiet\Xml;
+
 /**
  * A week and its days.
  */
-class Data_DayPlus extends Data_Day {
+class DayDataPlus extends DayData {
 
   /**
-   * @return Generator Yields data about day.
+   * @return Iterator Yields data about day.
    */
-  protected function gatherData(SplFileInfo $weekDir, int $day): Generator {
+  protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
     yield 'parent' => "$year/$quarter/$week";
 

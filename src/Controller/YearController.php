@@ -1,11 +1,22 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use Iterator;
+use SplFileInfo;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Data\QuarterData;
+use Bibelstudiet\Data\YearDataPlus;
+
 /**
  * A year and its quarters.
  */
-final class Controller_Year extends Controller_Base {
+final class YearController extends Controller {
 
-  use Cache_Get;
+  use CachedGet;
 
   /**
    * @return SplFileInfo /<year>
@@ -19,13 +30,13 @@ final class Controller_Year extends Controller_Base {
    */
   protected function getSourceFiles(Request $request): Iterator {
     $yearDir = $this->getYearDir($request);
-    foreach(Data_YearPlus::getQuarterDirs($yearDir) as $quarterDir)
-      yield from Data_Quarter::getQuarterFiles($quarterDir);
+    foreach(YearDataPlus::getQuarterDirs($yearDir) as $quarterDir)
+      yield from QuarterData::getQuarterFiles($quarterDir);
   }
 
   protected function load(Request $request): JsonResponse {
     $yearDir = $this->getYearDir($request);
-    $year = new Data_YearPlus($yearDir);
+    $year = new YearDataPlus($yearDir);
     return new JsonResponse($year);
   }
 }

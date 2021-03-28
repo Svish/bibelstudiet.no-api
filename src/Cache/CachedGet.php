@@ -1,6 +1,15 @@
 <?php
 
-trait Cache_Get {
+namespace Bibelstudiet\Cache;
+
+use Iterator;
+use SplFileInfo;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Api\Response;
+
+trait CachedGet {
 	protected $parameter_whitelist = [];
 
   public function get(Request $request): Response {
@@ -11,26 +20,30 @@ trait Cache_Get {
         }
       ));
 
-    $files = map($this->getSourceFiles($request),
-      function(SplFileInfo $file) {
-        return $file->getMTime();
-      }
-    );
-
-    $last_modified = reduce($files, 0, 'max');
+    $source_files = $this->getSourceFiles($request);
+    $last_modified = $this->getLastModified($source_files);
 
     $get = array_whitelist($_GET, $this->parameter_whitelist);
     $get = json_encode($get, JSON_NUMERIC_CHECK);
     $key = $request->getPath().$get;
-    $cache = Cache_Cache::init(get_called_class())->key($key);
+    $cache = Cache::init(get_called_class())->key($key);
     $data = $cache->get($last_modified);
 
-    if ($data !== null)
+    if ($data !== null) {
       return $data;
+    }
 
     $data = $this->load($request);
     $cache->set($data);
     return $data;
+  }
+
+  private function getLastModified(Iterator $files) {
+    $mtimes = map($files, function(SplFileInfo $file) {
+      return $file->getMTime();
+    });
+
+    return reduce($mtimes, 0, 'max');
   }
 
   /**

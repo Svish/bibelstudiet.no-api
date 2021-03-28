@@ -1,5 +1,9 @@
 <?php
 
+namespace Bibelstudiet\Api;
+
+use Iterator;
+
 class JsonResponse implements Response {
   private $data;
 

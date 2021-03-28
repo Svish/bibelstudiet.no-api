@@ -1,5 +1,15 @@
 <?php
 
+namespace Bibelstudiet;
+
+use Bibelstudiet\Error\NotFoundError;
+
+use DOMDocument;
+use DOMXPath;
+use DOMNode;
+use DOMNodeList;
+use SplFileInfo;
+
 /**
  * Helper class for dealing with XML documents.
  */
@@ -52,7 +62,7 @@ final class Xml
     if ($xml !== false)
       return $xml;
 
-    throw new Error_NotFound("Unable to extract {$node->getNodePath()}");
+    throw new NotFoundError("Unable to extract {$node->getNodePath()}");
   }
 
 }

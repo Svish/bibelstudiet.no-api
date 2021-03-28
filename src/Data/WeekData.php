@@ -1,14 +1,25 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use CallbackFilterIterator;
+
+use Bibelstudiet\Xml;
+use Bibelstudiet\Date;
+use Bibelstudiet\Regex;
+
 /**
  * A week.
  */
-class Data_Week extends Data_Base {
+class WeekData extends DirectoryData {
 
   /**
-   * @return Generator Yields data about week.
+   * @return Iterator Yields data about week.
    */
-  protected function gatherData(SplFileInfo $weekDir): Generator {
+  protected function gatherData(SplFileInfo $weekDir): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
     yield 'type' => 'week';
     yield 'url' => "$year/$quarter/$week";

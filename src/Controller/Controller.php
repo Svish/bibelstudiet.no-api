@@ -1,10 +1,16 @@
 <?php
 
-abstract class Controller_Base {
+namespace Bibelstudiet\Controller;
+
+use SplFileInfo;
+
+use Bibelstudiet\Error\NotFoundError;
+
+abstract class Controller {
 
   /**
    * Helper method to create CONTENT paths.
-   * @throws Error_NotFound If path is not a directory.
+   * @throws NotFoundError If path is not a directory.
    */
   final protected function getContentDir(...$parts): SplFileInfo {
     $dir = new SplFileInfo(CONTENT.implode(DIRECTORY_SEPARATOR, $parts));
@@ -13,7 +19,7 @@ abstract class Controller_Base {
       return $dir;
 
     $path = cleanPath($dir);
-    throw new Error_NotFound("Path '$path' not found");
+    throw new NotFoundError("Path '$path' not found");
   }
 
 }

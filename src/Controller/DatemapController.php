@@ -1,9 +1,27 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use CallbackFilterIterator;
+
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Data\DayData;
+use Bibelstudiet\Data\WeekData;
+use Bibelstudiet\Date;
+
 /**
- * List of years.
+ * Map over all dates and their corresponding lesson.
  */
-class Controller_Datemap extends Controller_Index {
+class DatemapController extends IndexController {
+
+  use CachedGet;
 
   protected function getSourceFiles(Request $request): Iterator {
     $rootDir = $this->getRootDir();
@@ -26,19 +44,19 @@ class Controller_Datemap extends Controller_Index {
   private function gatherDates(Iterator $weekFiles): Iterator {
     foreach ($weekFiles as $weekFile) {
       // Sunday
-      $sunday = Data_Week::from($weekFile->getPathInfo());
+      $sunday = new WeekData($weekFile->getPathInfo());
       yield $sunday->date => $sunday;
 
       // Monday..Friday
       foreach (range(2, 6) as $day) {
-        $day = Data_Day::from($weekFile->getPathInfo(), $day);
+        $day = new DayData($weekFile->getPathInfo(), $day);
         $date = new Date($day->date);
         yield "$date" => $day;
       }
 
       // Sabbath
-      $sabbath = Data_Day::from($weekFile->getPathInfo(), 7);
-      yield $sabbath->date => Data_Day::from($weekFile->getPathInfo(), 7);
+      $sabbath = new DayData($weekFile->getPathInfo(), 7);
+      yield $sabbath->date => new DayData($weekFile->getPathInfo(), 7);
     }
   }
 

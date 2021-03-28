@@ -1,6 +1,8 @@
 <?php
 
-final class HTTP {
+namespace Bibelstudiet;
+
+final class Http {
 
   /**
    * Set an HTTP status code.

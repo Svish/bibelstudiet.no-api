@@ -1,14 +1,26 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use CallbackFilterIterator;
+
+use PHPImage;
+
+use Bibelstudiet\Xml;
+use Bibelstudiet\Regex;
+
 /**
  * A quarter.
  */
-class Data_Quarter extends Data_Base {
+class QuarterData extends DirectoryData {
 
   /**
-   * @return Generator Yields data about quarter.
+   * @return Iterator Yields data about quarter.
    */
-  protected function gatherData(SplFileInfo $quarterDir): Generator {
+  protected function gatherData(SplFileInfo $quarterDir): Iterator {
     [, $year, $quarter] = $this->parsePath($quarterDir);
 
     yield 'type' => 'quarter';

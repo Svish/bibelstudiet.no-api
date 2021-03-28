@@ -1,11 +1,21 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use Iterator;
+use SplFileInfo;
+
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Data\IndexData;
+
 /**
  * List of years.
  */
-class Controller_Index extends Controller_Base {
+class IndexController extends Controller {
 
-  use Cache_Get;
+  use CachedGet;
 
   /**
    * @return SplFileInfo /
@@ -16,12 +26,12 @@ class Controller_Index extends Controller_Base {
 
   protected function getSourceFiles(Request $request): Iterator {
     $rootDir = $this->getRootDir();
-    return Data_Index::getYearDirs($rootDir);
+    return IndexData::getYearDirs($rootDir);
   }
 
   protected function load(Request $request): JsonResponse {
     $rootDir = $this->getRootDir();
-    $index = new Data_Index($rootDir);
+    $index = new IndexData($rootDir);
     return new JsonResponse($index);
   }
 }

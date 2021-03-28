@@ -2,13 +2,11 @@
 
 // Include autoloader and stuff
 require 'vendor/autoload.php';
-require 'src/util.php';
-require 'constants.php';
 
 // Error handling
 error_reporting(E_ALL);
-set_error_handler('ErrorHandler::error_handler');
-set_exception_handler('ErrorHandler::exception_handler');
+set_error_handler(['\Bibelstudiet\Error\Handler', 'error_handler']);
+set_exception_handler(['\Bibelstudiet\Error\Handler', 'exception_handler']);
 
 // Get path from htaccess parameter
 $_SERVER['PATH_INFO'] = isset($_GET['path_uri']) ? $_GET['path_uri'] : '/';
@@ -18,4 +16,4 @@ unset($_GET['path_uri']);
 header_remove();
 
 // Kick things off
-Api::serve();
+\Bibelstudiet\Api\Api::serve();

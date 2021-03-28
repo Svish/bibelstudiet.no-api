@@ -1,5 +1,11 @@
 <?php
 
+namespace Bibelstudiet\Api;
+
+use Bibelstudiet\Error\NotFoundError;
+use Bibelstudiet\Error\DeveloperError;
+use Bibelstudiet\Error\HttpError;
+
 final class Router {
   private $basepath;
   private $routes = [];
@@ -38,19 +44,19 @@ final class Router {
       return $this->call($handler, $method, $params);
     }
 
-    throw new Error_NotFound("Path '$path' not found");
+    throw new NotFoundError("Path '$path' not found");
   }
 
   private function call($handler, string $method, array $params) {
     if (!class_exists($handler))
-      throw new Error_Developer("Handler not found: $handler");
+      throw new DeveloperError("Handler not found: $handler");
 
     $handler = [new $handler(), $method];
 
     try {
-      $method = new ReflectionMethod(...$handler);
-    } catch (ReflectionException $e) {
-      throw new Error_Http(405, null, $e);
+      $method = new \ReflectionMethod(...$handler);
+    } catch (\ReflectionException $e) {
+      throw new HttpError(405, null, $e);
     }
 
     $path = array_shift($params);

@@ -1,16 +1,28 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use CallbackFilterIterator;
+
 /**
  * A quarter and its weeks.
  */
-class Data_YearPlus extends Data_Year {
+class YearDataPlus extends YearData {
 
   /**
-   * @return Generator Yields data about year.
+   * @return Iterator Yields data about year.
    */
-  protected function gatherData(SplFileInfo $yearDir): Generator {
+  protected function gatherData(SplFileInfo $yearDir): Iterator {
     yield from parent::gatherData($yearDir);
-    yield 'quarters' => mapToArray($this->getQuarterDirs($yearDir), ['Data_Quarter', 'from']);
+    yield 'quarters' => mapToArray(
+      $this->getQuarterDirs($yearDir),
+      function (SplFileInfo $quarterDir) {
+        return new QuarterData($quarterDir);
+      }
+    );
   }
 
   /**

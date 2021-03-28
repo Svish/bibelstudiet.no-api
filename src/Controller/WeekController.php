@@ -1,11 +1,22 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use Iterator;
+use SplFileInfo;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Data\WeekData;
+use Bibelstudiet\Data\WeekDataPlus;
+
 /**
  * A week and its days.
  */
-class Controller_Week extends Controller_Base {
+class WeekController extends Controller {
 
-  use Cache_Get;
+  use CachedGet;
 
   /**
    * @return SplFileInfo /<year>/<quarter>/<week>
@@ -23,12 +34,12 @@ class Controller_Week extends Controller_Base {
    */
   protected function getSourceFiles(Request $request): Iterator {
     $weekDir = $this->getWeekDir($request);
-    yield from Data_Week::getWeekFiles($weekDir);
+    yield from WeekData::getWeekFiles($weekDir);
   }
 
   protected function load(Request $request): JsonResponse {
     $weekDir = $this->getWeekDir($request);
-    $week = new Data_WeekPlus($weekDir);
+    $week = new WeekDataPlus($weekDir);
     return new JsonResponse($week);
   }
 }

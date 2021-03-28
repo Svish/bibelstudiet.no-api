@@ -1,6 +1,10 @@
 <?php
 
-abstract class Data implements JsonSerializable {
+namespace Bibelstudiet\Data;
+
+use JsonSerializable;
+
+abstract class JsonData implements JsonSerializable {
   private $data;
 
   protected function __construct($data) {

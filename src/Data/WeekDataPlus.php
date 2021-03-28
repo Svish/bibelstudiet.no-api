@@ -1,21 +1,26 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+
 /**
  * A week and its days.
  */
-class Data_WeekPlus extends Data_Week {
+class WeekDataPlus extends WeekData {
 
   /**
-   * @return Generator Adds more details and list of days.
+   * @return Iterator Adds more details and list of days.
    */
-  protected function gatherData(SplFileInfo $weekDir): Generator {
+  protected function gatherData(SplFileInfo $weekDir): Iterator {
     [, $year, $quarter] = $this->parsePath($weekDir);
 
     yield 'parent' => "$year/$quarter";
     yield from parent::gatherData($weekDir);
 
     yield 'days' => array_map(function($key) use($weekDir) {
-      return Data_Day::from($weekDir, $key);
+      return new DayData($weekDir, $key);
     }, range(0, 7));
 
   }

@@ -1,5 +1,10 @@
 <?php
 
+namespace Bibelstudiet;
+
+use DateTimeImmutable;
+use DateInterval;
+
 class Date extends DateTimeImmutable {
 
   public function addDays(int $days): self {

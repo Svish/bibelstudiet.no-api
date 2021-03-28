@@ -1,5 +1,7 @@
 <?php
 
+namespace Bibelstudiet\Api;
+
 final class Request {
   private string $path;
   private array $params;

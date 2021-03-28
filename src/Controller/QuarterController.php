@@ -1,11 +1,22 @@
 <?php
 
+namespace Bibelstudiet\Controller;
+
+use Iterator;
+use SplFileInfo;
+
+use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Api\Request;
+use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Data\QuarterDataPlus;
+use Bibelstudiet\Data\WeekData;
+
 /**
  * A quarter and its weeks.
  */
-final class Controller_Quarter extends Controller_Base {
+final class QuarterController extends Controller {
 
-  use Cache_Get;
+  use CachedGet;
 
   /**
    * @return SplFileInfo /<year>/<quarter>
@@ -23,15 +34,15 @@ final class Controller_Quarter extends Controller_Base {
   protected function getSourceFiles(Request $request): Iterator {
     $quarterDir = $this->getQuarterDir($request);
 
-    yield from Data_QuarterPlus::getQuarterFiles($quarterDir);
+    yield from QuarterDataPlus::getQuarterFiles($quarterDir);
 
-    foreach(Data_QuarterPlus::getWeekDirs($quarterDir) as $weekDir)
-      yield from Data_Week::getWeekFiles($weekDir);
+    foreach(QuarterDataPlus::getWeekDirs($quarterDir) as $weekDir)
+      yield from WeekData::getWeekFiles($weekDir);
   }
 
   protected function load(Request $request): JsonResponse {
     $quarterDir = $this->getQuarterDir($request);
-    $quarter = new Data_QuarterPlus($quarterDir);
+    $quarter = new QuarterDataPlus($quarterDir);
     return new JsonResponse($quarter);
   }
 }

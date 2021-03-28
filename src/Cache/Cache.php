@@ -1,6 +1,10 @@
 <?php
 
-class Cache_Cache
+namespace Bibelstudiet\Cache;
+
+use SplFileInfo;
+
+final class Cache
 {
   const DIR = CACHE;
   private $dir;
@@ -19,8 +23,8 @@ class Cache_Cache
     return new static($id);
   }
 
-  public function key(string $key): Cache_File {
-    return new Cache_File(new SplFileInfo($this->path($key))) ;
+  public function key(string $key): File {
+    return new File(new SplFileInfo($this->path($key))) ;
   }
 
   private function path(string $key) {

@@ -1,13 +1,20 @@
 <?php
 
+namespace Bibelstudiet\Data;
+
+use Iterator;
+use SplFileInfo;
+use FilesystemIterator;
+use CallbackFilterIterator;
+
+use Bibelstudiet\Xml;
+use Bibelstudiet\Date;
+use Bibelstudiet\Regex;
+
 /**
  * A week and its days.
  */
-class Data_Day extends Data {
-
-  public static function from(SplFileInfo $weekDir, int $day): self {
-    return new static($weekDir, $day);
-  }
+class DayData extends JsonData {
 
   public function __construct(SplFileInfo $weekDir, int $day) {
     $data = $this->gatherData($weekDir, $day);
@@ -16,9 +23,9 @@ class Data_Day extends Data {
   }
 
   /**
-   * @return Generator Yields data about day.
+   * @return Iterator Yields data about day.
    */
-  protected function gatherData(SplFileInfo $weekDir, int $day): Generator {
+  protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
     yield 'url' => "$year/$quarter/$week/$day";
 

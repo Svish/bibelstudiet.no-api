@@ -1,6 +1,10 @@
 <?php
 
-class Cache_File {
+namespace Bibelstudiet\Cache;
+
+use SplFileInfo;
+
+class File {
   private SplFileInfo $file;
 
   public function __construct(SplFileInfo $file) {
@@ -33,10 +37,6 @@ class Cache_File {
   }
 
   private function expired(int $last_modified): bool {
-
-    // TODO: Remove
-    return true;
-
     if ( ! $this->file->isFile()) {
       header('X-Cache-Hit: miss');
       return true;
