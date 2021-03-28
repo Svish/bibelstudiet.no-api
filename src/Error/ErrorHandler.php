@@ -27,18 +27,20 @@ final class ErrorHandler {
    * @see https://www.php.net/manual/en/function.set-exception-handler
    */
   public function exception_handler(Throwable $error): void {
-    $status = $error instanceof HttpError
+    $statusCode = $error instanceof HttpError
       ? $error->getHttpStatus()
       : 500;
-    Http::set_status($status);
+    $res = new JsonResponse(static::pickDetails($statusCode, $error));
 
-    $res = new JsonResponse(static::pickDetails($error));
+    Http::set_status($statusCode);
     $res->flush();
   }
 
-  private static function pickDetails(Throwable $error): Iterator {
-    yield 'message' => $error->getMessage();
+  private static function pickDetails(int $statusCode, Throwable $error): Iterator {
     yield 'type' => get_class($error);
+    yield 'status' => Http::code($statusCode);
+    yield 'statusCode' => $statusCode;
+    yield 'message' => $error->getMessage();
 
     if ($error->getPrevious() != null)
       yield 'reason' => $error->getPrevious()->getMessage();
