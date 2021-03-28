@@ -11,10 +11,6 @@ use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\Response;
 
 trait CachedGet {
-  /**
-   * GET parameters to include in cache key.
-   */
-	protected $parameter_whitelist = [];
 
   /**
    * Creates the response which will be cached by this trait.
@@ -37,17 +33,19 @@ trait CachedGet {
       ));
 
     // Create cache key
-    $get = array_whitelist($_GET, $this->parameter_whitelist);
-    $get = json_encode($get, JSON_NUMERIC_CHECK);
-    $key = $request->getPath().$get;
+    $key = $request->getPath();
+
+    if ($this instanceof CacheParameters) {
+      $get = array_whitelist($_GET, $this->getCacheParameters());
+      $get = json_encode($get, JSON_NUMERIC_CHECK);
+      $key .= $get;
+    }
 
     // Get cache key
     $cache = Cache::init(get_called_class())->key($key);
 
     // Try get data from cache
     try {
-      $data = $cache->get();
-
       $mtime = max(
         static::getMTimeOfIncludedFiles(),
         static::getMTime($this->getDataSources($request))
@@ -57,7 +55,7 @@ trait CachedGet {
         header('X-Cache-Hit: expired');
       } else {
         header('X-Cache-Hit: hit');
-        return $data;
+        return $cache->get();
       }
     } catch (\RuntimeException $e) {
       header('X-Cache-Hit: miss');
