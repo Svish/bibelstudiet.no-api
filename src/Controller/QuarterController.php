@@ -31,7 +31,7 @@ final class QuarterController extends Controller {
   /**
    * @return SplFileInfo /<year>/<quarters>/*.* & <week>/*.xml
    */
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $quarterDir = $this->getQuarterDir($request);
 
     yield from QuarterDataPlus::getQuarterFiles($quarterDir);

@@ -23,7 +23,7 @@ class DatemapController extends IndexController {
 
   use CachedGet;
 
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $rootDir = $this->getRootDir();
     $it = new RecursiveDirectoryIterator($rootDir, FilesystemIterator::SKIP_DOTS);
     $it = new RecursiveIteratorIterator($it);
@@ -35,7 +35,7 @@ class DatemapController extends IndexController {
   }
 
   protected function load(Request $request): JsonResponse {
-    $weekFiles = $this->getSourceFiles($request);
+    $weekFiles = $this->getDataSources($request);
     $data = $this->gatherDates($weekFiles);
     $data = iterator_to_array($data, true);
     return new JsonResponse($data);

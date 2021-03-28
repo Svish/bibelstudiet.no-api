@@ -16,7 +16,7 @@ final class DayController extends WeekController {
   /**
    * @return SplFileInfo /<year>/<quarters>/<week>/*.*
    */
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $weekDir = $this->getWeekDir($request);
     yield from DayDataPlus::getDayFiles($weekDir, $request->day);
   }

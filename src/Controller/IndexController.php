@@ -24,7 +24,7 @@ class IndexController extends Controller {
     return $this->getContentDir();
   }
 
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $rootDir = $this->getRootDir();
     return IndexData::getYearDirs($rootDir);
   }

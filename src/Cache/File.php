@@ -11,7 +11,7 @@ class File {
     $this->file = $file;
   }
 
-  public function set($data) {
+  public function set($data): void {
     $file = $this->file->openFile('c');
     $file->flock(LOCK_EX);
     $file->ftruncate(0);
@@ -19,14 +19,9 @@ class File {
     $file->fflush();
     $file->flock(LOCK_UN);
     $file = null;
-
-    return $data;
   }
 
-  public function get(int $last_modified) {
-    if ($this->expired($last_modified))
-      return null;
-
+  public function get() {
     $file = $this->file->openFile('r');
     $file->flock(LOCK_SH);
     $data = $file->fread($file->getSize());
@@ -36,18 +31,7 @@ class File {
     return unserialize($data);
   }
 
-  private function expired(int $last_modified): bool {
-    if ( ! $this->file->isFile()) {
-      header('X-Cache-Hit: miss');
-      return true;
-    }
-
-    if ($this->file->getMTime() < $last_modified) {
-      header('X-Cache-Hit: expired');
-      return true;
-    }
-
-    header('X-Cache-Hit: hit');
-    return false;
+  public function getMTime(): int {
+    return $this->file->getMTime();
   }
 }

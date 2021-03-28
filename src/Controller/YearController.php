@@ -28,7 +28,7 @@ final class YearController extends Controller {
   /**
    * @return SplFileInfo /<year>/<quarters>/*.*
    */
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $yearDir = $this->getYearDir($request);
     foreach(YearDataPlus::getQuarterDirs($yearDir) as $quarterDir)
       yield from QuarterData::getQuarterFiles($quarterDir);

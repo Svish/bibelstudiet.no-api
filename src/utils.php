@@ -11,6 +11,14 @@ function cleanPath(SplFileInfo $path): string {
 }
 
 /**
+ * Iterates over included files as SplFileInfo objects.
+ */
+function iterate_included_files(): Iterator {
+  foreach(get_included_files() as $file)
+    yield new SplFileInfo($file);
+}
+
+/**
  * Maps an iterable to an array
  */
 function mapToArray(iterable $iterable, callable $function): array {

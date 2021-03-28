@@ -32,7 +32,7 @@ class WeekController extends Controller {
   /**
    * @return SplFileInfo /<year>/<quarters>/<week>/*.xml
    */
-  protected function getSourceFiles(Request $request): Iterator {
+  protected function getDataSources(Request $request): Iterator {
     $weekDir = $this->getWeekDir($request);
     yield from WeekData::getWeekFiles($weekDir);
   }
