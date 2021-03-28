@@ -5,7 +5,9 @@ namespace Bibelstudiet\Data;
 use Iterator;
 use SplFileInfo;
 
-abstract class DirectoryData extends JsonData {
+use Bibelstudiet\Api\JsonResponse;
+
+abstract class DirectoryData extends JsonResponse {
 
   public function __construct(SplFileInfo $dir) {
     $data = $this->gatherData($dir);

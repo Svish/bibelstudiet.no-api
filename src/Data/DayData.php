@@ -7,6 +7,7 @@ use SplFileInfo;
 use FilesystemIterator;
 use CallbackFilterIterator;
 
+use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Xml;
 use Bibelstudiet\Date;
 use Bibelstudiet\Regex;
@@ -14,7 +15,7 @@ use Bibelstudiet\Regex;
 /**
  * A week and its days.
  */
-class DayData extends JsonData {
+class DayData extends JsonResponse {
 
   public function __construct(SplFileInfo $weekDir, int $day) {
     $data = $this->gatherData($weekDir, $day);

@@ -3,12 +3,25 @@
 namespace Bibelstudiet\Api;
 
 use Iterator;
+use JsonSerializable;
 
-class JsonResponse implements Response {
-  private $data;
+class JsonResponse implements Response, JsonSerializable {
+  protected $data;
 
   public function __construct($data) {
     $this->data = $data;
+  }
+
+  public function jsonSerialize() {
+    return $this->data;
+  }
+
+  public function __isset($key): bool {
+    return array_key_exists($key, $this->data);
+  }
+
+  public function __get($data) {
+    return $this->data[$data];
   }
 
   public function flush(): void {
