@@ -27,7 +27,7 @@ class DayData extends JsonResponse {
    */
   protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
     [, $year, $quarter, $week] = $this->parsePath($weekDir);
-    yield 'id' => [intval($year), intval($quarter), intval($week), $day];
+    yield 'id' => [$year, $quarter, $week, "$day"];
 
     foreach ($this->getDayFiles($weekDir, $day) as $file)
       switch($file->getExtension()) {
@@ -38,7 +38,6 @@ class DayData extends JsonResponse {
             case 0: {
               $node = $xml->query('/week/introduction')->item(0);
               yield 'type' => 'introduction';
-              yield 'name' => 'Introduksjon';
               break;
             }
 
@@ -46,7 +45,6 @@ class DayData extends JsonResponse {
               $node = $xml->query('/week/story')->item(0);
               $date = new Date($xml->string('/week/@sabbath'));
               yield 'type' => 'story';
-              yield 'name' => 'Misjonsfortelling';
               yield 'title' => $xml->string('title', $node);
               yield 'date' => "$date";
               break;
@@ -55,7 +53,6 @@ class DayData extends JsonResponse {
             default: {
               $node = $xml->query('/week/day')->item($day-1);
               yield 'type' => 'study';
-              yield 'name' => "Studium $day";
               yield 'title' => $xml->string('title', $node);
 
               $date = new Date($xml->string('/week/@sabbath'));
