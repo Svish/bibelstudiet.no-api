@@ -32,10 +32,9 @@ class WeekData extends DirectoryData {
           yield 'title' => $xml->string('/week/title');
 
           $sabbath = new Date($xml->string('/week/@sabbath'));
-          yield 'sabbath' => "$sabbath";
-
           $sunday = $sabbath->subDays(6);
           yield 'date' => "$sunday";
+          yield 'sabbath' => "$sabbath";
           break;
         }
       }

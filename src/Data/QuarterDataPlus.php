@@ -40,7 +40,7 @@ class QuarterDataPlus extends QuarterData {
             ],
           ];
 
-          yield 'forword' => $xml->toString('/quarter/forword');
+          yield 'forword' => ['xml' => $xml->toString('/quarter/forword')];
           break;
         }
 

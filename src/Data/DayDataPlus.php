@@ -27,17 +27,17 @@ class DayDataPlus extends DayData {
           switch($day) {
             case 0:
               $node = $xml->query('/week/introduction')->item(0);
-              yield 'introduction' => $xml->toString($node);
+              yield 'introduction' => ['xml' => $xml->toString($node)];
               break;
 
             case 7:
               $node = $xml->query('/week/story')->item(0);
-              yield 'story' => $xml->toString($node);
+              yield 'story' => ['xml' => $xml->toString($node)];
               break;
 
             default:
               $node = $xml->query('/week/day')->item($day-1);
-              yield 'study' => $xml->toString($node);
+              yield 'study' => ['xml' => $xml->toString($node)];
               break;
           }
 
@@ -51,11 +51,11 @@ class DayDataPlus extends DayData {
           yield 'audio' => [
             'url' =>  cleanPath($file),
             'size' => $file->getSize(),
+            'bitrate' => $id3['bitrate'],
             'playtime' => [
               'string' => $id3['playtime_string'],
               'seconds' => $id3['playtime_seconds'],
             ],
-            'bitrate' => $id3['bitrate'],
           ];
         }
     }
