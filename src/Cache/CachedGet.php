@@ -46,18 +46,21 @@ trait CachedGet {
 
     // Try get data from cache
     try {
+      $data = $cache->get();
+
       $mtime = max(
         static::getMTimeOfIncludedFiles(),
         static::getMTime($this->getDataSources($request))
       );
 
-      if($cache->getMTime() < $mtime) {
+      if($mtime >= $cache->getMTime()) {
         header('X-Cache-Hit: expired');
       } else {
         header('X-Cache-Hit: hit');
-        return $cache->get();
+        return $data;
       }
-    } catch (\RuntimeException $e) {
+    } catch (\Throwable $e) {
+      // Cache file missing or incompatible with classes
       header('X-Cache-Hit: miss');
     }
 
