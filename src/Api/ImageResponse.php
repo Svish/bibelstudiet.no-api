@@ -13,7 +13,11 @@ class ImageResponse implements Response {
   public function __construct(SplFileInfo $file) {
     $this->image = new Image($file);
     // TODO: Get from GET parameters.
-    $this->resized = $this->image->resize(700, 995);
+    $this->resized = $this->image->resize(...static::getTemporaryHardCodedSize());
+  }
+
+  public static function getTemporaryHardCodedSize(): array {
+    return [500, 706];
   }
 
   public function flush(): void {

@@ -36,10 +36,11 @@ class QuarterData extends DirectoryData {
 
         case 'png': {
           $image = new Image($file);
+          [$width, $height] = ImageResponse::getTemporaryHardCodedSize();
           yield 'image' => [
             'url' => WEBROOT."$year/$quarter.png",
-            'width' => $image->getWidth(),
-            'height' => $image->getHeight(),
+            'width' => $width, // $image->getWidth(),
+            'height' => $height, // $image->getHeight(),
           ];
           break;
         }
