@@ -50,7 +50,7 @@ class QuarterDataPlus extends QuarterData {
 
         case 'pdf': {
           yield 'pdf' => [
-            'url' => "/$year/$quarter.pdf",
+            'url' => WEBROOT."$year/$quarter.pdf",
             'size' => $file->getSize(),
           ];
           break;
