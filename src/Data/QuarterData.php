@@ -2,13 +2,13 @@
 
 namespace Bibelstudiet\Data;
 
+use Bibelstudiet\Api\ImageResponse;
 use Iterator;
 use SplFileInfo;
 use FilesystemIterator;
 use CallbackFilterIterator;
 
-use PHPImage;
-
+use Bibelstudiet\Image;
 use Bibelstudiet\Xml;
 use Bibelstudiet\Regex;
 
@@ -35,13 +35,7 @@ class QuarterData extends DirectoryData {
         }
 
         case 'png': {
-          $image = new PHPImage($file->getPathname());
-          yield 'image' => [
-            'url' => '/image/'.$file->getFilename(),
-            'size' => $file->getSize(),
-            'height' => $image->getHeight(),
-            'width' => $image->getWidth(),
-          ];
+          yield 'image' => new Image($file);
           break;
         }
       }

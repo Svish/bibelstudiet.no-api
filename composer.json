@@ -17,16 +17,8 @@
       "Bibelstudiet\\": "src/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/Svish/php-image"
-    }
-  ],
   "require": {
     "php": ">=7.4",
-    "kus/php-image": "dev-master",
-    "ralouphie/mimey": "^2.1",
     "james-heinrich/getid3": "^1.9"
   }
 }

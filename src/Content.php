@@ -20,7 +20,7 @@ final class Content {
       return $dir;
 
     $path = cleanPath($dir);
-    throw new NotFoundError("Path '$path' not found");
+    throw new NotFoundError("Not found");
   }
 
   /**
@@ -35,7 +35,7 @@ final class Content {
       return $file;
 
     $path = cleanPath($file);
-    throw new NotFoundError("Path '$path' not found");
+    throw new NotFoundError("Not found");
   }
 
 }

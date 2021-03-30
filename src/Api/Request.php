@@ -2,7 +2,9 @@
 
 namespace Bibelstudiet\Api;
 
-final class Request {
+use JsonSerializable;
+
+final class Request implements JsonSerializable {
   private string $method;
   private string $path;
   private array $params;
@@ -27,5 +29,13 @@ final class Request {
 
   public function __get($param) {
     return $this->params[$param];
+  }
+
+  public function jsonSerialize() {
+    return [
+      'method' => $this->method,
+      'path' => $this->path,
+      'params' => $this->params,
+    ];
   }
 }

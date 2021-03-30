@@ -9,9 +9,9 @@ class JsonResponse implements Response, JsonSerializable {
   protected $data;
 
   public function __construct($data) {
-    if ($data instanceof Iterator)
-      $data = iterator_to_array($data, true);
-    $this->data = $data;
+    $this->data = $data instanceof Iterator
+      ? iterator_to_array($data, true)
+      : $data;
   }
 
   public function jsonSerialize() {
@@ -28,7 +28,7 @@ class JsonResponse implements Response, JsonSerializable {
 
   public function flush(): void {
     header('Content-Type: application/json; charset=utf-8');
-    echo json_encode($this->data);
+    echo json_encode($this);
   }
 
   public static function debug($data): void {
