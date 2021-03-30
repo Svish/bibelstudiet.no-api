@@ -35,7 +35,12 @@ class QuarterData extends DirectoryData {
         }
 
         case 'png': {
-          yield 'image' => new Image($file);
+          $image = new Image($file);
+          yield 'image' => [
+            'url' => "/$year/$quarter.png",
+            'width' => $image->getWidth(),
+            'height' => $image->getHeight(),
+          ];
           break;
         }
       }

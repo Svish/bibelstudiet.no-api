@@ -3,11 +3,10 @@
 namespace Bibelstudiet;
 
 use SplFileInfo;
-use JsonSerializable;
 
 use Bibelstudiet\Error\DeveloperError;
 
-class Image implements JsonSerializable {
+class Image {
   protected SplFileInfo $file;
   private int $width;
   private int $height;
@@ -15,7 +14,6 @@ class Image implements JsonSerializable {
   private $image;
 
   private static $output = [
-    'ext' => 'png',
     'mime' => 'image/png',
     'fn' => 'imagepng',
     'q' => 9,
@@ -35,14 +33,6 @@ class Image implements JsonSerializable {
   public function __unserialize(array $data): void {
     $this->file = new SplFileInfo($data['path']);
     $this->load();
-  }
-
-  public function jsonSerialize() {
-    return [
-      'url' => cleanPath($this->file->getPathInfo()).'.'.static::$output['ext'],
-      'width' => $this->getWidth(),
-      'height' => $this->getHeight(),
-    ];
   }
 
   public function getWidth(): int {
