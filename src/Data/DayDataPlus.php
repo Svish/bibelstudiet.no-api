@@ -49,7 +49,7 @@ class DayDataPlus extends DayData {
           $id3 = $lib->analyze($file);
 
           yield 'audio' => [
-            'url' =>  cleanPath($file),
+            'url' =>  '/audio/' . $file->getFilename(),
             'size' => $file->getSize(),
             'bitrate' => $id3['bitrate'],
             'playtime' => [

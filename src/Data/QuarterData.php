@@ -37,7 +37,7 @@ class QuarterData extends DirectoryData {
         case 'png': {
           $image = new PHPImage($file->getPathname());
           yield 'image' => [
-            'url' => cleanPath($file),
+            'url' => '/image/'.$file->getFilename(),
             'size' => $file->getSize(),
             'height' => $image->getHeight(),
             'width' => $image->getWidth(),

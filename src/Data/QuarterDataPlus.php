@@ -29,7 +29,9 @@ class QuarterDataPlus extends QuarterData {
           $credits = $xml->query('/quarter/credits')->item(0);
           yield 'meta' => [
             'title' => $xml->string('title', $credits),
-            'author' => $xml->string('author', $credits),
+            'author' => [
+              'name' => $xml->string('author', $credits),
+            ],
             'editor' => [
               'name' => $xml->string('editor', $credits),
               'email' => $xml->string('editor/@email', $credits),
@@ -46,7 +48,7 @@ class QuarterDataPlus extends QuarterData {
 
         case 'pdf': {
           yield 'pdf' => [
-            'url' =>  cleanPath($file),
+            'url' => '/pdf/' . $file->getFilename(),
             'size' => $file->getSize(),
           ];
           break;
