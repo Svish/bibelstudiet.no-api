@@ -3,37 +3,37 @@
 namespace Bibelstudiet\Cache;
 
 use Iterator;
-use ArrayIterator;
 use SplFileInfo;
 
 use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\Response;
+use Bibelstudiet\Controller\Controller;
 
-trait CachedGet {
-
-  /**
-   * Creates the response which will be cached by this trait.
-   */
-  protected abstract function load(Request $request): Response;
+abstract class CachedController extends Controller {
 
   /**
-   * Iterates over data sources (dirs/files) which should possible expire the cache.
+   * List directories and files current request depends upon.
    */
-  protected abstract function getDataSources(Request $request): Iterator;
+  protected abstract function getDataSources(): Iterator;
+
+  /**
+   * Create response for current request.
+   */
+  protected abstract function getResponse(): Response;
 
 
-  public final function get(Request $request): Response {
+  public final function get(): Response {
     // For debugging source file paths
     if (isset($_GET['sources']))
-      return new JsonResponse(map($this->getDataSources($request),
+      return new JsonResponse(map($this->getDataSources(),
         function(SplFileInfo $file) {
           return cleanPath($file);
         }
       ));
 
     // Create cache key
-    $key = $request->getPath();
+    $key = $this->request->getPath();
 
     if ($this instanceof CacheParameters) {
       $get = array_whitelist($_GET, $this->getCacheParameters());
@@ -49,8 +49,8 @@ trait CachedGet {
       $data = $cache->get();
 
       $mtime = max(
-        static::getMTimeOfIncludedFiles(),
-        static::getMTime($this->getDataSources($request))
+        static::getMTime(iterate_included_files()),
+        static::getMTime($this->getDataSources())
       );
 
       if($mtime >= $cache->getMTime()) {
@@ -65,17 +65,12 @@ trait CachedGet {
     }
 
     // Get data regular way
-    $data = $this->load($request);
+    $data = $this->getResponse();
     $cache->set($data);
     return $data;
   }
 
-  private final static function getMTimeOfIncludedFiles() {
-    $files = iterate_included_files();
-    return self::getMTime($files);
-  }
-
-  private final static function getMTime(Iterator $files) {
+  private final static function getMTime(iterable $files) {
     $mtimes = map($files, function(SplFileInfo $file) {
       return $file->getMTime();
     });

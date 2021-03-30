@@ -26,9 +26,9 @@ final class Router {
       $request = new Request($method, array_shift($params), $params);
 
       try {
-        $handler = new $handler();
+        $handler = new $handler($request);
         $method = new \ReflectionMethod($handler, $request->getMethod());
-        return $method->invoke($handler, $request);
+        return $method->invoke($handler);
       } catch (\ReflectionException $e) {
         throw new HttpError(405, null, $e);
       }

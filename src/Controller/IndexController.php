@@ -9,23 +9,17 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use CallbackFilterIterator;
 
-use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\JsonResponse;
-use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Cache\CachedController;
 use Bibelstudiet\Cache\CacheParameters;
 use Bibelstudiet\Content;
-use Bibelstudiet\Data\DayData;
-use Bibelstudiet\Data\WeekData;
-use Bibelstudiet\Date;
 use Bibelstudiet\Error\HttpError;
-use Bibelstudiet\Error\NotFoundError;
 
 /**
  * Map over all content ids.
  */
-class IndexController implements CacheParameters {
+class IndexController extends CachedController implements CacheParameters {
 
-  use CachedGet;
   function getCacheParameters(): array {
     return ['type'];
   }
@@ -36,7 +30,7 @@ class IndexController implements CacheParameters {
     'week' => '%^\d{4}/\d/\d+$%',
   ];
 
-  protected function getDataSources(Request $request): Iterator {
+  protected function getDataSources(): Iterator {
     $rootDir = Content::getDir();
     $it = new RecursiveDirectoryIterator($rootDir, FilesystemIterator::SKIP_DOTS);
     $it = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::SELF_FIRST);
@@ -46,13 +40,13 @@ class IndexController implements CacheParameters {
     yield from $it;
   }
 
-  protected function load(Request $request): JsonResponse {
+  protected function getResponse(): JsonResponse {
     $type = $_GET['type'] ?? null;
 
     if( ! array_key_exists($type, $this->type_filter))
       throw new HttpError(400, 'Missing ?type=year|quarter|week');
 
-    $files = $this->getDataSources($request);
+    $files = $this->getDataSources($this->request);
     $data = mapToArray($files, 'cleanPath');
     $data = array_filter($data, function ($path) use ($type) {
       return preg_match($this->type_filter[$type], $path);

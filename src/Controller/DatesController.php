@@ -9,8 +9,8 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use CallbackFilterIterator;
 
-use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\JsonResponse;
+use Bibelstudiet\Cache\CachedController;
 use Bibelstudiet\Content;
 use Bibelstudiet\Data\DayData;
 use Bibelstudiet\Data\WeekData;
@@ -19,9 +19,9 @@ use Bibelstudiet\Date;
 /**
  * Map over all dates and their corresponding lesson.
  */
-class DatesController {
+class DatesController extends CachedController {
 
-  protected function getDataSources(Request $request): Iterator {
+  protected function getDataSources(): Iterator {
     $rootDir = Content::getDir();
     $it = new RecursiveDirectoryIterator($rootDir, FilesystemIterator::SKIP_DOTS);
     $it = new RecursiveIteratorIterator($it);
@@ -32,8 +32,8 @@ class DatesController {
     yield from $it;
   }
 
-  protected function load(Request $request): JsonResponse {
-    $weekFiles = $this->getDataSources($request);
+  protected function getResponse(): JsonResponse {
+    $weekFiles = $this->getDataSources($this->request);
     $data = $this->gatherDates($weekFiles);
     return new JsonResponse($data);
   }

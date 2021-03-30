@@ -4,7 +4,6 @@ namespace Bibelstudiet\Controller;
 
 use Iterator;
 
-use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\JsonResponse;
 use Bibelstudiet\Data\DayDataPlus;
 
@@ -16,14 +15,14 @@ final class DayController extends WeekController {
   /**
    * @return SplFileInfo /<year>/<quarters>/<week>/*.*
    */
-  protected function getDataSources(Request $request): Iterator {
-    $weekDir = $this->getWeekDir($request);
-    yield from DayDataPlus::getDayFiles($weekDir, $request->day);
+  protected function getDataSources(): Iterator {
+    $weekDir = $this->getWeekDir();
+    yield from DayDataPlus::getDayFiles($weekDir, $this->request->day);
   }
 
-  protected function load(Request $request): JsonResponse {
-    $weekDir = $this->getWeekDir($request);
-    $week = new DayDataPlus($weekDir, $request->day);
+  protected function getResponse(): JsonResponse {
+    $weekDir = $this->getWeekDir();
+    $week = new DayDataPlus($weekDir, $this->request->day);
     return new JsonResponse($week);
   }
 }

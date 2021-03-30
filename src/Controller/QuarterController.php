@@ -6,8 +6,7 @@ use Iterator;
 use SplFileInfo;
 
 use Bibelstudiet\Api\JsonResponse;
-use Bibelstudiet\Api\Request;
-use Bibelstudiet\Cache\CachedGet;
+use Bibelstudiet\Cache\CachedController;
 use Bibelstudiet\Content;
 use Bibelstudiet\Data\QuarterDataPlus;
 use Bibelstudiet\Data\WeekData;
@@ -15,25 +14,23 @@ use Bibelstudiet\Data\WeekData;
 /**
  * A quarter and its weeks.
  */
-final class QuarterController {
-
-  use CachedGet;
+final class QuarterController extends CachedController {
 
   /**
    * @return SplFileInfo /<year>/<quarter>
    */
-  final protected function getQuarterDir(Request $request): SplFileInfo {
+  final protected function getQuarterDir(): SplFileInfo {
     return Content::getDir(
-      intval($request->year),
-      intval($request->quarter)
+      intval($this->request->year),
+      intval($this->request->quarter)
     );
   }
 
   /**
    * @return SplFileInfo /<year>/<quarters>/*.* & <week>/*.xml
    */
-  protected function getDataSources(Request $request): Iterator {
-    $quarterDir = $this->getQuarterDir($request);
+  protected function getDataSources(): Iterator {
+    $quarterDir = $this->getQuarterDir();
 
     yield from QuarterDataPlus::getQuarterFiles($quarterDir);
 
@@ -41,8 +38,8 @@ final class QuarterController {
       yield from WeekData::getWeekFiles($weekDir);
   }
 
-  protected function load(Request $request): JsonResponse {
-    $quarterDir = $this->getQuarterDir($request);
+  protected function getResponse(): JsonResponse {
+    $quarterDir = $this->getQuarterDir();
     $quarter = new QuarterDataPlus($quarterDir);
     return new JsonResponse($quarter);
   }
