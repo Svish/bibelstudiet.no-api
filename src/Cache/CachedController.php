@@ -5,10 +5,9 @@ namespace Bibelstudiet\Cache;
 use Iterator;
 use SplFileInfo;
 
-use Bibelstudiet\Api\JsonResponse;
-use Bibelstudiet\Api\Request;
 use Bibelstudiet\Api\Response;
 use Bibelstudiet\Controller\Controller;
+use Bibelstudiet\Http;
 
 abstract class CachedController extends Controller {
 
@@ -23,15 +22,7 @@ abstract class CachedController extends Controller {
   protected abstract function getResponse(): Response;
 
 
-  public final function get(): Response {
-    // For debugging source file paths
-    if (isset($_GET['sources']))
-      return new JsonResponse(map($this->getDataSources(),
-        function(SplFileInfo $file) {
-          return cleanPath($file);
-        }
-      ));
-
+  public final function get(): void {
     // Create cache key
     $key = $this->request->getPath();
 
@@ -43,31 +34,75 @@ abstract class CachedController extends Controller {
 
     // Get cache key
     $cache = Cache::init(get_called_class())->key($key);
+    $cached = null;
 
     // Try get data from cache
     try {
-      $data = $cache->get();
+      $cached = $cache->get();
 
       $mtime = max(
         static::getMTime(iterate_included_files()),
         static::getMTime($this->getDataSources())
       );
 
-      if($mtime >= $cache->getMTime()) {
-        header('X-Cache-Hit: expired');
-      } else {
-        header('X-Cache-Hit: hit');
-        return $data;
+      // Check if cache is expired
+      if($mtime < $cache->getMTime()) {
+        // Get if-headers
+        $lmod = @$_SERVER['HTTP_IF_MODIFIED_SINCE'] ?: false;
+        $etag = @trim($_SERVER['HTTP_IF_NONE_MATCH']) ?: false;
+
+        // Respond empty 304 if both match
+        if($cached['lmod'] == $lmod && $cached['etag'] == rtrim($etag, '-gzip')) {
+          header('X-Cache-Hit: perfect hit');
+          Http::set_status(304);
+        }
+        // Otherwise respond with cached
+        else {
+          header('X-Cache-Hit: hit');
+          foreach($cached['headers'] as $h)
+            header($h);
+          echo $cached['output'];
+        }
+
+        return;
       }
     } catch (\Throwable $e) {
-      // Cache file missing or incompatible with classes
-      header('X-Cache-Hit: miss');
+      // Ignore and move on to fresh response instead
     }
 
-    // Get data regular way
-    $data = $this->getResponse();
-    $cache->set($data);
-    return $data;
+    // Get fresh response
+    $response = $this->getResponse();
+
+    // Capture it
+    ob_start();
+    $response->flush();
+    $output = ob_get_clean();
+
+    // Cache it
+    $mtime = max(
+      static::getMTime(iterate_included_files()),
+      static::getMTime($this->getDataSources())
+    );
+    $lmod = gmdate('D, d M Y H:i:s T', $mtime);
+    $etag = '"'.sha1($output).'"';
+    $max_age = 10; // TODO: Increase this
+
+    header("Last-Modified: $lmod");
+    header("Etag: $etag");
+    header("Cache-Control: max-age=$max_age, public");
+
+    $cache->set([
+      'headers' => headers_list(),
+      'mtime' => $mtime,
+      'lmod' => $lmod,
+			'etag' => $etag,
+      'length' => strlen($output),
+      'output' => $output,
+    ]);
+
+    // Output it
+    header('X-Cache-Hit: '.($cached ? 'expired' : 'miss'));
+    echo $output;
   }
 
   private final static function getMTime(iterable $files) {
