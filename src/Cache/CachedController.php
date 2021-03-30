@@ -40,13 +40,8 @@ abstract class CachedController extends Controller {
     try {
       $cached = $cache->get();
 
-      $mtime = max(
-        static::getMTime(iterate_included_files()),
-        static::getMTime($this->getDataSources())
-      );
-
-      // Check if cache is expired
-      if($mtime < $cache->getMTime()) {
+      // Check if cache is still valid
+      if($this->getMTime() < $cache->getMTime()) {
         // Get if-headers
         $lmod = @$_SERVER['HTTP_IF_MODIFIED_SINCE'] ?: false;
         $etag = @trim($_SERVER['HTTP_IF_NONE_MATCH']) ?: false;
@@ -59,8 +54,7 @@ abstract class CachedController extends Controller {
         // Otherwise respond with cached
         else {
           header('X-Cache-Hit: hit');
-          foreach($cached['headers'] as $h)
-            header($h);
+          array_walk($cached['headers'], 'header');
           echo $cached['output'];
         }
 
@@ -79,11 +73,7 @@ abstract class CachedController extends Controller {
     $output = ob_get_clean();
 
     // Cache it
-    $mtime = max(
-      static::getMTime(iterate_included_files()),
-      static::getMTime($this->getDataSources())
-    );
-    $lmod = gmdate('D, d M Y H:i:s T', $mtime);
+    $lmod = gmdate('D, d M Y H:i:s T', $this->getMTime());
     $etag = '"'.sha1($output).'"';
     $max_age = 10; // TODO: Increase this
 
@@ -92,12 +82,12 @@ abstract class CachedController extends Controller {
     header("Cache-Control: max-age=$max_age, public");
 
     $cache->set([
-      'headers' => headers_list(),
-      'mtime' => $mtime,
       'lmod' => $lmod,
 			'etag' => $etag,
-      'length' => strlen($output),
+      'headers' => headers_list(),
       'output' => $output,
+      // ? Not used, but here for tracking included files during unserialization
+      'response' => $response,
     ]);
 
     // Output it
@@ -105,7 +95,13 @@ abstract class CachedController extends Controller {
     echo $output;
   }
 
-  private final static function getMTime(iterable $files) {
+  private final function getMTime(iterable $files = null) {
+    if ($files === null)
+      return max(
+        $this->getMTime(iterate_included_files()),
+        $this->getMTime($this->getDataSources())
+      );
+
     $mtimes = map($files, function(SplFileInfo $file) {
       return $file->getMTime();
     });
