@@ -2,7 +2,9 @@
 
 namespace Bibelstudiet\Data;
 
+use Bibelstudiet\Error\DeveloperError;
 use Iterator;
+use Exception;
 use SplFileInfo;
 
 use getID3;
@@ -55,18 +57,22 @@ class DayDataPlus extends DayData {
         }
 
         case 'mp3': {
-          $lib = new getID3;
-          $id3 = $lib->analyze($file);
+          try {
+            $lib = new getID3;
+            $id3 = $lib->analyze($file);
 
-          yield 'audio' => [
-            'src' => WEBROOT."$year/$quarter/$week/$day.mp3",
-            'size' => $file->getSize(),
-            'bitrate' => $id3['bitrate'],
-            'playtime' => [
-              'string' => $id3['playtime_string'],
-              'seconds' => $id3['playtime_seconds'],
-            ],
-          ];
+            yield 'audio' => [
+              'src' => WEBROOT."$year/$quarter/$week/$day.mp3",
+              'size' => $file->getSize(),
+              'bitrate' => $id3['bitrate'],
+              'playtime' => [
+                'string' => $id3['playtime_string'],
+                'seconds' => $id3['playtime_seconds'],
+              ],
+            ];
+          } catch(Exception $e) {
+            throw new DeveloperError("Failed to read audio data from {$file->getFilename()}", $e);
+          }
         }
     }
   }
