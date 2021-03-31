@@ -17,7 +17,7 @@ class ImageResponse implements Response {
   }
 
   public static function getTemporaryHardCodedSize(): array {
-    return [500, 706];
+    return [700, 988];
   }
 
   public function flush(): void {
