@@ -18,6 +18,8 @@ class DayDataPlus extends DayData {
    * @return Iterator Yields data about day.
    */
   protected function gatherData(SplFileInfo $weekDir, int $day): Iterator {
+    [, $year, $quarter, $week] = $this->parsePath($weekDir);
+
     yield from parent::gatherData($weekDir, $day);
 
     foreach ($this->getDayFiles($weekDir, $day) as $file)
@@ -27,17 +29,25 @@ class DayDataPlus extends DayData {
           switch($day) {
             case 0:
               $node = $xml->query('/week/introduction')->item(0);
-              yield 'introduction' => ['xml' => $xml->toString($node)];
+              yield 'introduction' => [
+                'xml' => $xml->toString($node),
+              ];
               break;
 
             case 7:
               $node = $xml->query('/week/story')->item(0);
-              yield 'story' => ['xml' => $xml->toString($node)];
+              yield 'story' => [
+                'title' => $xml->string('title', $node),
+                'xml' => $xml->toString($node),
+              ];
               break;
 
             default:
               $node = $xml->query('/week/day')->item($day-1);
-              yield 'study' => ['xml' => $xml->toString($node)];
+              yield 'study' => [
+                'title' => $xml->string('title', $node),
+                'xml' => $xml->toString($node),
+              ];
               break;
           }
 
@@ -49,7 +59,7 @@ class DayDataPlus extends DayData {
           $id3 = $lib->analyze($file);
 
           yield 'audio' => [
-            'url' =>  '/audio/' . $file->getFilename(),
+            'src' => WEBROOT."$year/$quarter/$week/$day.mp3",
             'size' => $file->getSize(),
             'bitrate' => $id3['bitrate'],
             'playtime' => [

@@ -44,13 +44,17 @@ class QuarterDataPlus extends QuarterData {
             ],
           ];
 
-          yield 'forword' => ['xml' => $xml->toString('/quarter/forword')];
+          $forword = $xml->query('/quarter/forword')->item(0);
+          yield 'forword' => [
+            'title' => $xml->string('title', $forword),
+            'xml' => $xml->toString($forword),
+          ];
           break;
         }
 
         case 'pdf': {
           yield 'pdf' => [
-            'url' => WEBROOT."$year/$quarter.pdf",
+            'href' => WEBROOT."$year/$quarter.pdf",
             'size' => $file->getSize(),
           ];
           break;
