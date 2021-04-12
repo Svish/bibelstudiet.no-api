@@ -52,6 +52,13 @@ final class Xml
   }
 
   /**
+   * Perform an XPath number `evaluate` on this document.
+   */
+  public function number(string $query, DOMNode $context = null) {
+    return $this->xpath->evaluate("number($query)", $context);
+  }
+
+  /**
    * Convert given DOMNode or XPath query to string.
    *
    * @param DOMNode|string Node or query to convert to string.
