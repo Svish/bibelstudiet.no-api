@@ -47,7 +47,8 @@ class QuarterDataPlus extends QuarterData {
           $forword = $xml->query('/quarter/forword')->item(0);
           yield 'forword' => [
             'title' => $xml->string('title', $forword),
-            'xml' => $xml->toString($forword),
+            'about' => $xml->string('about', $forword),
+            'xml' => $xml->transformToString($forword, 'removeExtracted'),
           ];
           break;
         }

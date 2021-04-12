@@ -34,6 +34,9 @@ class WeekData extends DirectoryData {
           $sunday = $sabbath->subDays(6);
           yield 'date' => "$sunday";
           yield 'sabbath' => "$sabbath";
+
+          yield 'memory' => $xml->transformToString('/week/introduction/memory');
+          yield 'background' => $xml->transformToString('/week/introduction/background');
           break;
         }
       }

@@ -33,7 +33,7 @@ class DayDataPlus extends DayData {
               $node = $xml->query('/week/introduction')->item(0);
               yield 'introduction' => [
                 'pageNumber' => $xml->string('@page', $node),
-                'xml' => $xml->toString($node),
+                'xml' => $xml->transformToString($node, 'removeExtracted'),
               ];
               break;
 
@@ -41,8 +41,9 @@ class DayDataPlus extends DayData {
               $node = $xml->query('/week/story')->item(0);
               yield 'story' => [
                 'title' => $xml->string('title', $node),
+                'about' => $xml->string('about', $node),
                 'pageNumber' => $xml->string('@page', $node),
-                'xml' => $xml->toString($node),
+                'xml' => $xml->transformToString($node, 'removeExtracted'),
               ];
               break;
 
@@ -51,7 +52,7 @@ class DayDataPlus extends DayData {
               yield 'study' => [
                 'title' => $xml->string('title', $node),
                 'pageNumber' => $xml->string('@page', $node),
-                'xml' => $xml->toString($node),
+                'xml' => $xml->transformToString($node, 'removeExtracted'),
               ];
               break;
           }

@@ -6,14 +6,13 @@ AddDefaultCharset UTF-8
 # Compression
 AddOutputFilterByType DEFLATE text/xml text/plain
 AddOutputFilterByType DEFLATE application/json application/javascript
+AddOutputFilterByType DEFLATE application/pdf
 
 # Expiration
 ExpiresActive On
+ExpiresByType image/png "access plus 1 week"
 ExpiresByType audio/mpeg "access plus 1 week"
 ExpiresByType application/pdf "access plus 1 week"
-ExpiresByType image/svg+xml "access plus 1 week"
-ExpiresByType image/x-icon "access plus 1 week"
-ExpiresByType image/png "access plus 1 week"
 
 # Rewrite base
 RewriteEngine on
