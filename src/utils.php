@@ -52,7 +52,7 @@ function map(iterable $iterable, callable $function): Iterator {
 /**
  * @see https://github.com/nikic/iter/blob/master/src/iter.php#L320-L326
  */
-function reduce(iterable $iterable, $startValue = null, callable $function) {
+function reduce(iterable $iterable, $startValue, callable $function) {
   $acc = $startValue;
   foreach ($iterable as $key => $value) {
       $acc = $function($acc, $value, $key);

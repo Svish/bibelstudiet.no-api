@@ -95,7 +95,7 @@ abstract class CachedController extends Controller {
     echo $output;
   }
 
-  private final function getMTime(iterable $files = null) {
+  private function getMTime(iterable $files = null) {
     if ($files === null)
       return max(
         $this->getMTime(iterate_included_files()),
