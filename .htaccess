@@ -10,9 +10,9 @@ AddOutputFilterByType DEFLATE application/pdf
 
 # Expiration
 ExpiresActive On
-ExpiresByType image/png "access plus 1 week"
-ExpiresByType audio/mpeg "access plus 1 week"
-ExpiresByType application/pdf "access plus 1 week"
+ExpiresByType image/png "access plus 6 month"
+ExpiresByType audio/mpeg "access plus 6 month"
+ExpiresByType application/pdf "access plus 6 month"
 
 # Rewrite base
 RewriteEngine on
