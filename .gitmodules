@@ -1,0 +1,4 @@
+[submodule "contents"]
+	path = contents
+	url = ssh://torleif@tb-diskstation/volume2/git/bibelstudiet.git
+	branch = main
