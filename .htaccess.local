@@ -5,8 +5,8 @@ AddDefaultCharset UTF-8
 
 # Rewrite base
 RewriteEngine on
-RewriteBase /media.bibelstudiet.no/
-SetEnv BASE /media.bibelstudiet.no/
+RewriteBase /api.bibelstudiet.no/
+SetEnv BASE /api.bibelstudiet.no/
 
 # Use PHP
 RewriteCond %{REQUEST_FILENAME} !-f
