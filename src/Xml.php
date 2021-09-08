@@ -40,6 +40,13 @@ final class Xml
   }
 
   /**
+   * Perform an XPath `query` on this document.
+   */
+  public function queryArray(string $query, DOMNode $context = null): array {
+    return iterator_to_array($this->xpath->query($query, $context));
+  }
+
+  /**
    * Perform an XPath `evaluate` on this document.
    */
   public function evaluate(string $query, DOMNode $context = null) {
