@@ -20,6 +20,8 @@ final class Xml
   private DOMDocument $doc;
   private DOMXpath $xpath;
 
+  public const XSL_DIR = DOCROOT.'xsl'.DIRECTORY_SEPARATOR;
+
   /**
    * Create a new helper for given xml-file.
    */
@@ -84,7 +86,7 @@ final class Xml
       $node = $this->query($node)->item(0);
 
     // Load XSL
-    $xslFile = new SplFileInfo(DOCROOT.'xsl'.DIRECTORY_SEPARATOR."$xslFilename.xsl");
+    $xslFile = new SplFileInfo(self::XSL_DIR."$xslFilename.xsl");
     if(!$xslFile->isFile())
       throw new DeveloperError("Could not find $xslFilename XSL directory");
 

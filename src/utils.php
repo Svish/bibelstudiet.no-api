@@ -1,5 +1,7 @@
 <?php
 
+use Bibelstudiet\Xml;
+
 /**
  * Truncates `CONTENT` and normalizes slashes to `/`.
  */
@@ -16,6 +18,9 @@ function cleanPath(SplFileInfo $path): string {
 function iterate_included_files(): Iterator {
   foreach(get_included_files() as $file)
     yield new SplFileInfo($file);
+
+  foreach(new FilesystemIterator(Xml::XSL_DIR) as $file)
+    yield $file;
 }
 
 /**
